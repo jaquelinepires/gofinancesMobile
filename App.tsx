@@ -2,15 +2,15 @@ import React from "react";
 import AppLoading from "expo-app-loading";
 import { ThemeProvider } from "styled-components/native";
 import theme from "./src/global/styles/theme";
+import { NavigationContainer } from '@react-navigation/native'
+import { AppRouter } from './src/routes/app.routes'
+
 import {
   useFonts,
   Poppins_400Regular,
   Poppins_500Medium,
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
-// import { View, Text } from "react-native";
-import { Register } from "./src/screens/Register";
-
 export default function App() {
   //fonts
   const [fontsLoaded] = useFonts({
@@ -23,7 +23,9 @@ export default function App() {
   }
   return (
     <ThemeProvider theme={theme}>
-      <Register />
+      <NavigationContainer>
+      <AppRouter />
+      </NavigationContainer>
     </ThemeProvider>
   );
 }

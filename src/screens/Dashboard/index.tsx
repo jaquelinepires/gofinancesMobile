@@ -12,7 +12,7 @@ import {
   HighlightCards,
   Transactions,
   Title,
-  TransactionList
+  TransactionList,
 } from "./styles";
 import { HighlightCard } from "../../components/HighlightCard";
 import { TransactionCard, TransactionCardProps } from "../../components/TransactionCard";
@@ -73,7 +73,8 @@ export function Dashboard() {
               <UserName>Jaqueline</UserName>
             </User>
           </UserInfo>
-          <Icon name="exit-to-app" />
+            <Icon
+            name="exit-to-app" />
         </UserWrapper>
       </Header>
     <HighlightCards>
