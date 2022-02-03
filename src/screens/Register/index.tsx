@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup'
+import { yupResolver } from '@hookform/resolvers/yup';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { InputForm } from "../../components/InputForm";
 import { Modal, TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
@@ -31,12 +31,16 @@ import {
     [name: string]: any;
   }
   //formulario obrigatorio
-const schema = Yup.object().shape({
-  name: Yup.string().required('Nome é obrigatório'),
-  amount: Yup.number().required().typeError('Informe um valor númerico')
-  .positive('O valor não pode ser negativo')
-  .required('O valor é obrigatório')
-})
+  const schema = Yup.object().shape({
+    name: Yup
+    .string()
+    .required('Nome é obrigatório'),
+    amount: Yup
+    .number()
+    .typeError('Informe um valor númerico')
+    .positive('O valor não pode ser negativo')
+    .required('O valor é obrigatório'),
+  });
 
 
 export function Register() {
@@ -62,9 +66,9 @@ export function Register() {
    })
 
 
-   function handleTransactionTypeSelect(type: 'up' | 'down') {
-    setTransactionType(type)
-   }
+   function handleTransactionsTypeSelect(type: 'positive' | 'negative'){
+    setTransactionType(type);
+  }
 
    function handleOpenSelectCategoryModal(){
     setCategoryModalOpen(true)
@@ -75,19 +79,19 @@ export function Register() {
 
    async function handleRegister(form: FormData){
     if(!transactionType)
-    return Alert.alert('Selecione o tipo da transação');
+      return Alert.alert('Selecione o tipo da transação');
 
     if(category.key === 'category')
-      return Alert.alert('Selecione a categoria')
+      return Alert.alert('Selecione a categoria');
       
-    const newTransation = {
-      id: String(uuid.v4()),
-      name: form.name,
-      amount: form.amount,
-      transactionType,
-      category: category.key,
-      date: new Date()
-    }
+      const newTransaction = {
+        id: String(uuid.v4()),
+        name: form.name,
+        amount: form.amount,
+        type: transactionType,
+        category: category.key,
+        date: new Date()
+      }
 
     //AsyncStorage
     try {
@@ -96,7 +100,7 @@ export function Register() {
 
       const dataFormatted = [
         ...currentData,
-        newTransation
+        newTransaction
       ];
 
       await AsyncStorage.setItem(dataKey, JSON.stringify(dataFormatted))
@@ -105,10 +109,11 @@ export function Register() {
       setTransactionType('');
       setCategory({
         key: 'category',
-        name: 'categoria'
+        name: 'Categoria'
       });
       
       navigate("Listagem");
+
     } catch (error) {
       console.log(error)
       Alert.alert("não foi possível salvar")
@@ -156,15 +161,15 @@ export function Register() {
             <TransactionTypeButton
             type="up"
             title="Income"
-            onPress={() => handleTransactionTypeSelect('up')}
-            isActive={transactionType === 'up'}
+            onPress={() => handleTransactionsTypeSelect('positive')}
+            isActive={transactionType === 'positive'}
             />
 
             <TransactionTypeButton
             type="down"
             title="Outcome" 
-            onPress={() => handleTransactionTypeSelect('down')}
-            isActive={transactionType === 'down'}
+            onPress={() => handleTransactionsTypeSelect('negative')}
+            isActive={transactionType === 'negative'}
             />
           </TransactionsTypes>
           
