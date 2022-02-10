@@ -26,6 +26,7 @@ import {
    Fields,
    TransactionsTypes
    } from "./styles";
+import { useAuth } from "../../hooks/auth";
 
    export type FormData = {
     [name: string]: any;
@@ -46,55 +47,57 @@ import {
 export function Register() {
   const [transactionType, setTransactionType] = useState('');
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
+  const { user } = useAuth()
 
-  const dataKey = '@gofinances:transactions'
-
+  
   const [category, setCategory] = useState({
     key: 'category',
     name: 'Categoria',
-   });
-
-   const { navigate }: NavigationProp<ParamListBase> = useNavigation();
-
-   const {
+  });
+  
+  const { navigate }: NavigationProp<ParamListBase> = useNavigation();
+  
+  const {
     control,
     handleSubmit,
     reset,
     formState: { errors }
-   } = useForm({
-     resolver: yupResolver(schema)
-   })
-
-
-   function handleTransactionsTypeSelect(type: 'positive' | 'negative'){
+  } = useForm({
+    resolver: yupResolver(schema)
+  })
+  
+  
+  function handleTransactionsTypeSelect(type: 'positive' | 'negative'){
     setTransactionType(type);
   }
-
-   function handleOpenSelectCategoryModal(){
+  
+  function handleOpenSelectCategoryModal(){
     setCategoryModalOpen(true)
-   }
-   function handleCloseSelectCategoryModal(){
+  }
+  function handleCloseSelectCategoryModal(){
     setCategoryModalOpen(false)
-   }
-
-   async function handleRegister(form: FormData){
+  }
+  
+  async function handleRegister(form: FormData){
     if(!transactionType)
-      return Alert.alert('Selecione o tipo da transação');
-
+    return Alert.alert('Selecione o tipo da transação');
+    
     if(category.key === 'category')
-      return Alert.alert('Selecione a categoria');
-      
-      const newTransaction = {
-        id: String(uuid.v4()),
-        name: form.name,
-        amount: form.amount,
-        type: transactionType,
-        category: category.key,
-        date: new Date()
-      }
-
+    return Alert.alert('Selecione a categoria');
+    
+    const newTransaction = {
+      id: String(uuid.v4()),
+      name: form.name,
+      amount: form.amount,
+      type: transactionType,
+      category: category.key,
+      date: new Date()
+    }
+    
     //AsyncStorage
     try {
+      
+      const dataKey = `@gofinances:transactions_user:${user.id}`
       const data = await AsyncStorage.getItem(dataKey);
       const currentData = data ? JSON.parse(data) : []
 
@@ -102,9 +105,9 @@ export function Register() {
         ...currentData,
         newTransaction
       ];
-
+      
       await AsyncStorage.setItem(dataKey, JSON.stringify(dataFormatted))
-
+      
       reset()
       setTransactionType('');
       setCategory({
@@ -113,21 +116,21 @@ export function Register() {
       });
       
       navigate("Listagem");
-
+      
     } catch (error) {
       console.log(error)
       Alert.alert("não foi possível salvar")
     }
-   }
-
-   useEffect(() => {
-     async function loadData() {
-       const data = await AsyncStorage.getItem(dataKey)
-       console.log(JSON.parse(data!));
-      }
-      loadData()
-   }
-   ,[])
+  }
+  
+  // useEffect(() => {
+  //   async function loadData() {
+  //      const data = await AsyncStorage.getItem(dataKey)
+  //      console.log(JSON.parse(data!));
+  //     }
+  //     loadData()
+  //  }
+  //  ,[])
 
   return (
       <TouchableWithoutFeedback
