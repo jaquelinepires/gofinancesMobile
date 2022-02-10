@@ -1,5 +1,9 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 import * as AuthSession from 'expo-auth-session';
+import * as AppleAuthentication from 'expo-apple-authentication';
+
+const { CLIENT_ID } = process.env;
+const { REDIRECT_URI } = process.env;
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -12,7 +16,8 @@ interface User {
 }
 interface IAuthContextData {
   user: User;
-  signInWithGoogle(): Promise<void>; 
+  signInWithGoogle(): Promise<void>;
+  signInWithApple(): Promise<void>; 
 }
 interface AuthorizationResponse {
   params: {
@@ -28,8 +33,6 @@ function AuthProvider({ children }: AuthProviderProps) {
   //autenticação Google
   async function signInWithGoogle() {
     try {
-      const CLIENT_ID = '780919981816-0aqg96f7mv8cmj8at6u1ru2gd3o9tj58.apps.googleusercontent.com';
-      const REDIRECT_URI = 'https://auth.expo.io/@jaquelinepires/gofinances';
       const RESPONSE_TYPE = 'token';
       const SCOPE = encodeURI('profile email');
 
@@ -53,11 +56,34 @@ function AuthProvider({ children }: AuthProviderProps) {
       throw new Error(error);
     }
   }
+  //Autenticaçao Apple
+  async function signInWithApple() {
+    try {
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL
+        ]
+      })
 
+      if (credential) {
+        const userLogged = {
+          id: String(credential.user),
+          email: credential.email!,
+          name: credential.fullName!.givenName!,
+        }
+
+        setUser(userLogged);
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
   return(
     <AuthContext.Provider value={{
       user, 
-      signInWithGoogle
+      signInWithGoogle,
+      signInWithApple
       }}>
        {children}
     </AuthContext.Provider>
