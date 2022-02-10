@@ -10,7 +10,7 @@ import { Resume } from "../screens/Resume";
 const { Navigator, Screen} = createBottomTabNavigator();
 
 
-export function AppRouter() {
+export function AppRoutes() {
   //poder acessar meu themas
   const theme = useTheme();
 
