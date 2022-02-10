@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from 'styled-components'
+import { useAuth } from '../../hooks/auth'
 import {
   Container,
   Header,
@@ -16,6 +17,7 @@ import {
   Transactions,
   Title,
   TransactionList,
+  LogoutButton,
   LoadContainer
 } from "./styles";
 import { HighlightCard } from "../../components/HighlightCard";
@@ -41,6 +43,7 @@ export function Dashboard() {
   const [ highlightData, setHighlightData ] = useState<HighlightData>({} as HighlightData );
 
   const theme = useTheme();
+  const { signOut, user } = useAuth()
 
   function getLastTransactionDate(
    collection: DataListProps[],
@@ -156,17 +159,16 @@ export function Dashboard() {
         <UserWrapper>
           <UserInfo>
             <Photo
-              source={{
-                uri: "https://avatars.githubusercontent.com/u/85652891?v=4",
-              }}
+              source={{ uri: user.photo}}
             />
             <User>
               <UserGreeting>Olá,</UserGreeting>
-              <UserName>Jaqueline</UserName>
+              <UserName>{user.name}</UserName>
             </User>
           </UserInfo>
-            <Icon
-            name="exit-to-app" />
+          <LogoutButton onPress={signOut}>
+            <Icon name="exit-to-app" />
+          </LogoutButton>
         </UserWrapper>
       </Header>
     <HighlightCards>

@@ -4,6 +4,7 @@ import { FlatList, FlatListProps } from 'react-native'
 import { MaterialIcons } from "@expo/vector-icons";
 import { getBottomSpace, getStatusBarHeight } from 'react-native-iphone-x-helper'
 import { DataListProps } from '.';
+import { TouchableOpacity } from 'react-native'
 
 export const Container = styled.View`
   flex: 1;
@@ -90,6 +91,8 @@ export const TransactionList = styled(
   showsVerticalScrollIndicator: false,
   contentContainerStyle: { paddingBottom: 10 },
 })``;
+
+export const LogoutButton = styled(TouchableOpacity)``;
 
 export const LoadContainer = styled.View`
   flex:1
