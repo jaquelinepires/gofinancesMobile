@@ -1,6 +1,6 @@
 <h1 align=center># Gofinances</h1>
 
-<img src="src/assets/gofinances.gif">
+<h1 align=center><img src="src/assets/gofinances.gif">
 
 ---
 
