@@ -75,14 +75,14 @@ export function SignIn() {
             onPress={handleSignInWithGoogle}
           />
 
-        {  
-        Platform.OS === 'ios' &&
+       
+        {/* Platform.OS === 'ios' && */}
         <SignInSocialButton
             title="Entrar com Apple"
             svg={AppleSvg}
             onPress={handleSignInWithApple}
           />
-        }
+        
         </FooterWrapper>
         { isLoading && 
           <ActivityIndicator 
